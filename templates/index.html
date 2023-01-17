@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        form {
+    width: 50%; /* set the width of the form */
+    margin: 0 auto; /* center the form on the page */
+    padding: 20px; /* add some padding to the form */
+    background-color: #f1f1f1; /* set a background color for the form */
+    border: 1px solid #ccc; /* add a border around the form */
+    border-radius: 5px; /* add rounded corners to the form */
+  }
+  
+  label {
+    font-weight: bold; /* make the label text bold */
+    margin-bottom: 10px; /* add some margin below the label */
+  }
+  
+  input[type="text"], select, input[type="number"] {
+    width: 80%; /* set the width of the input and select fields */
+    padding: 12px 10px; /* add some padding to the input and select fields */
+    margin-bottom: 20px; /* add some margin below the input and select fields */
+    border: 1px solid #ccc; /* add a border around the input and select fields */
+    border-radius: 4px; /* add rounded corners to the input and select fields */
+  }
+
+
+  input[type="submit"] {
+    width: 100%; /* set the width of the submit button */
+    background-color: #4CAF50; /* set a background color for the submit button */
+    color: white; /* set the text color for the submit button */
+    padding: 14px 20px; /* add some padding to the submit button */
+    margin-top: 20px; /* add some margin above the submit button */
+    border: none; /* remove the border around the submit button */
+    border-radius: 4px; /* add rounded corners to the submit button */
+    cursor: pointer; /* change the cursor to a hand when hovering over the submit button */
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #45a049; /* change the background color of the submit button on hover */
+  }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <form  action="{{ url_for('predict') }}" method="post">
+
+        <label for="brand">Марка:</label>
+        <select id="brand" name="brand">
+          {%for i in range(0, len)%}
+            <option value={{brands[i]}}> {{brands[i]}} </option>
+          {%endfor%}
+        </select>
+          <br>
+
+        <label for="model">Модел:</label>
+        <select id="model" name="model">
+            <option value="model">model </option>
+        </select>
+
+        <br>
+        <label for="year">Година:</label>
+        <input type="number" id="year" name="year">
+        <br>
+        <label for="fuel">Гориво:</label>
+        <select id="fuel" name="fuel">
+          <option value="p">Бензин</option>
+          <option value="d">Дизел</option>
+          <option value="g">Газ/Бензин</option>
+          <option value="m">Метан/Бензин</option>
+          <option value="e">Електричество</option>
+          <option value="h">Хибрид</option>
+        </select>
+        <br>
+        <label for="kms">Километри:</label>
+        <input type="number" id="kms" name="kms">
+        <br>
+        <label for="transmission">Трансмисия:</label>
+        <select id="transmission" name="transmission">
+          <option value="0">Ръчни скорости</option>
+          <option value="1">Автоматични скорости</option>
+        </select>
+        <br>
+        <label for="2door">Врати:</label>
+        <select id="2door" name="2door">
+          <option value="0">4 врати</option>
+          <option value="1">2 врати</option>
+        </select>
+        <br>
+        <label for="color">Цвят:</label>
+        <select id="color" name="color">
+          <option value="blue">син</option>
+          <option value="white">бял</option>
+          <option value="black">черен</option>
+          <option value="gray">сив</option>
+          <option value="yellow">жълт</option>
+          <option value="beige">бежов</option>
+          <option value="bordo">бордо</option>
+          <option value="bronze">бронзов</option>
+          <option value="violet">виолетов</option>
+          <option value="green">зелен</option>
+          <option value="gold">златен</option>
+          <option value="brown">кафяв</option>
+          <option value="orange">оранжев</option>
+          <option value="silver">сребърен</option>
+          <option value="red">червен</option>
+          <option value="purple">лилав</option>
+          <option value="ohra">охра</option>
+          <option value="perl">перла</option>
+          <option value="pink">розов</option>
+          <option value="chameleon">хамелеон</option>
+
+        </select>
+        <br>
+
+        <label for="type">Тип:</label>
+        <select id="type" name="type">
+          <option value="sedan">седан</option>
+          <option value="hatchback">хечбек</option>
+          <option value="combi">комби</option>
+          <option value="coupe">купе</option>
+          <option value="cabrio">кабрио</option>
+          <option value="jeep">джип</option>
+          <option value="pickup">пикап</option>
+          <option value="van">ван</option>
+        </select>
+        <br>
+        <label for="displacement">Обем на двигателя:</label>
+        <input type="number" id="displacement" name="displacement">
+        <br>
+        <label for="hp">Консики сили:</label>
+        <input type="number" id="hp" name="hp">
+        <br>
+        <label for="euro">Евро Рейтинг:</label>
+        <select id="euro" name="euro">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+        <br>
+        <input type="submit" value="Submit">
+      </form> 
+      <h4>{{ prediction_text }}</h4>
+</body>
+
+<script>
+  
+var e = document.getElementById("brand");
+
+// Make get request when it first loads
+var value = e.value;
+var val = e.options[e.selectedIndex].text;
+var xhr = new XMLHttpRequest();
+xhr.open("GET", `http://127.0.0.1:5000/get_brands/${val}`);
+xhr.send();
+
+ //Handle the response
+ xhr.onload = function() {
+    if (xhr.status === 200) {
+      //Parse the JSON response
+      var carModels = JSON.parse(xhr.responseText).models;
+      //Get the select element
+      var select = document.getElementById("model");
+      function removeOptions(selectElement) {
+          var i, L = selectElement.options.length - 1;
+          for(i = L; i >= 0; i--) {
+              selectElement.remove(i);
+          }
+        }
+      removeOptions(select);
+
+
+      //Loop through the car models and add them as options to the select element
+      for (var i = 0; i < carModels.length; i++) {
+        var option = document.createElement("option");
+        option.text = carModels[i];
+        
+        select.add(option);
+      }
+
+    } else {
+      console.log("Error retrieving car models");
+    }
+  };
+
+// Make get request when brand changes
+e.addEventListener("change", function() {
+  var value = e.value;
+  var val = e.options[e.selectedIndex].text;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", `http://127.0.0.1:5000/get_brands/${val}`);
+  xhr.send();
+
+  //Handle the response
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      //Parse the JSON response
+      var carModels = JSON.parse(xhr.responseText).models;
+      //Get the select element
+      var select = document.getElementById("model");
+      function removeOptions(selectElement) {
+          var i, L = selectElement.options.length - 1;
+          for(i = L; i >= 0; i--) {
+              selectElement.remove(i);
+          }
+        }
+      removeOptions(select);
+
+
+      //Loop through the car models and add them as options to the select element
+      for (var i = 0; i < carModels.length; i++) {
+        var option = document.createElement("option");
+        option.text = carModels[i];
+        
+        select.add(option);
+      }
+
+    } else {
+      console.log("Error retrieving car models");
+    }
+  };
+});
+
+
+
+</script>
+</html>
