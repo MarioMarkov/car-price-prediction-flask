@@ -42,6 +42,7 @@ data.loc[data['brand'] == 'BMW', ['model']] = data[data.brand == 'BMW'].model.ap
 # Remove models that are met less than 9 times
 data = data.groupby('model').filter(lambda x :len(x)>9)
 
+
 # Impute columns records with missing values with median or mode
 data.kms.fillna(data.kms.median(), inplace = True)
 
@@ -57,6 +58,7 @@ upper_range = Q3 + 1.5 * IQR
 outlier_free_list = [x for x in data.price if (
     (x > lower_range) & (x < upper_range))]
 data = data.loc[data.price.isin(outlier_free_list)]
+
 
 
 # There are some cars with inpossibly low kms maybe add 100 thausand for each
@@ -87,7 +89,7 @@ with open("brands_models.json", "w") as file:
 # Encoding string columns to numeric
 
 ordinal_enc_cols = ['brand','model','color','type']
-one_hot_columns = ['fuel']
+one_hot_columns = ['fuel','euro']
 
 ordinal_encoder = OrdinalEncoder()
 data[ordinal_enc_cols] = ordinal_encoder.fit_transform(data[ordinal_enc_cols])
@@ -131,7 +133,7 @@ xgb_model = XGBRegressor(random_state=1,objective='reg:squarederror',
                          learning_rate = 0.07,
                          max_depth = 3,
                          colsample_bytree = 0.4,
-                         n_estimators = 200)
+                         n_estimators = 150)
 
 
 
