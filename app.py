@@ -52,7 +52,7 @@ def predict():
 
 
     # One-Hot Encoding
-    one_hot_columns = ['fuel']
+    one_hot_columns = ['fuel','euro']
     oh_encoder = pickle.load(open('onehot_encoder', 'rb'))
     oh_columns = pd.DataFrame(oh_encoder.transform(car[one_hot_columns])) 
 
