@@ -1,31 +1,37 @@
-import pickle
-import requests
 import json
+import pickle
 
-import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 from xgboost import XGBRegressor
-import xgboost as xgb
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.model_selection import cross_val_score
-from sklearn.impute import SimpleImputer
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
- 
+
 
 
 #Load data
 data = pd.read_csv('./cars-data3.csv', index_col=None)
 test = pd.read_csv('./test-data.csv',  index_col=None)
 
-
 # Remove Id column
 data = data.drop(['id'],axis='columns')
 
+# Flag for cars that are kept from diving
+data['kept'] = np.where(data['kms']<100000, 1, 0)
+
+# Dropping some columns
+data = data.drop(['color'],axis='columns')
+data = data.drop(['kms'],axis='columns')
+data = data.drop(['euro'],axis='columns')
+
+test = test.drop(['color'],axis='columns')
+test = test.drop(['kms'],axis='columns')
+test = test.drop(['euro'],axis='columns')
 
 # Remove brands that are seen less than 200 times
 data = data.groupby('brand').filter(lambda x :len(x)>200)
@@ -41,37 +47,16 @@ data.loc[data['brand'] == 'BMW', ['model']] = data[data.brand == 'BMW'].model.ap
 
 # Remove models that are met less than 9 times
 data = data.groupby('model').filter(lambda x :len(x)>9)
+data = data.groupby('year').filter(lambda x :len(x)>10)
 
 
-# Impute columns records with missing values with median or mode
-data.kms.fillna(data.kms.median(), inplace = True)
-
-# TODO maybe not right 
+# Impute missing categorical variables with the the most common value
 data = data.fillna(data.mode().iloc[0])
 
-# Remove outliers in IQR 
-Q3 = np.quantile(data.price, 0.95)
-Q1 = np.quantile(data.price, 0.10)
-IQR = Q3 - Q1
-lower_range = Q1 - 1.5 * IQR
-upper_range = Q3 + 1.5 * IQR
-outlier_free_list = [x for x in data.price if (
-    (x > lower_range) & (x < upper_range))]
-data = data.loc[data.price.isin(outlier_free_list)]
-
-
-
-# There are some cars with inpossibly low kms maybe add 100 thausand for each
-Q3 = np.quantile(data.kms, 0.95)
-Q1 = np.quantile(data.kms, 0.40)
-IQR = Q3 - Q1
-lower_range = Q1 - 1.5 * IQR
-upper_range = Q3 + 1.5 * IQR
-outlier_free_list = [x for x in data.kms if (
-    (x > lower_range) & (x < upper_range))]
-data = data.loc[data.kms.isin(outlier_free_list)]
-
-data.price = np.log(data.price)
+# Trim outkliers 
+data = data[(data.hp >30) & (data.hp < 480)]
+data = data[(data.price >100) & (data.price < 60000)]
+data = data[(data.displacement >100) & (data.displacement < 8000)]
 
 # Get brands and models dictionary
 brands_models = {}
@@ -86,28 +71,40 @@ with open("brands_models.json", "w") as file:
     json.dump(brands_models, file)
 
 
-# Encoding string columns to numeric
+premium_brands = ["Porsche", "Audi","Mercedes-Benz","BMW"]
 
-ordinal_enc_cols = ['brand','model','color','type']
-one_hot_columns = ['fuel','euro']
+data['premium'] = np.where(data['brand'].isin(premium_brands), 1, 0)
+test['premium'] = np.where(test['brand'].isin(premium_brands), 1, 0)
 
+
+data["brand"] = data['brand'].astype(str) +"-"+ data["model"]
+test["brand"] = test['brand'].astype(str) +"-"+ test["model"]
+
+data = data.drop(['model'],axis='columns')
+test = test.drop(['model'],axis='columns')
+
+# Flag for new cars
+data['new'] = np.where(data['year']>2018, 1, 0)
+test['new'] = np.where(test['year']>2018, 1, 0)
+
+# correl = data.corr().round(2)
+# plt.figure(figsize = (15, 10))
+# sns.heatmap(correl, annot = True)
+# plt.show()
+
+# Define columns to be ordinal and one hot encoded
+ordinal_enc_cols = ['brand','type']
+one_hot_columns = ['fuel'] 
+
+# Fit ordinal encoder
 ordinal_encoder = OrdinalEncoder()
 data[ordinal_enc_cols] = ordinal_encoder.fit_transform(data[ordinal_enc_cols])
 test[ordinal_enc_cols] = ordinal_encoder.transform(test[ordinal_enc_cols])
 
-with open("ordinal_encoder", "wb") as f: 
-    pickle.dump(ordinal_encoder, f)
-
-#scatter_matrix(data[['price','kms','year']], figsize=(12, 8))
-#sns.catplot(data=data, x="fuel", y="price",kind="box")
-
 # Apply one-hot encoder to fuel column
-OH_encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
+OH_encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
 oh_columns_data = pd.DataFrame(OH_encoder.fit_transform(data[one_hot_columns]))
 oh_columns_test = pd.DataFrame(OH_encoder.transform(test[one_hot_columns])) 
-
-with open("onehot_encoder", "wb") as f: 
-    pickle.dump(OH_encoder, f)
 
 # One-hot encoding removed index; put it back
 oh_columns_data.index = data.index
@@ -122,40 +119,53 @@ data = pd.concat([num_X_data, oh_columns_data], axis=1)
 test = pd.concat([num_X_test, oh_columns_test], axis=1)
 
 
-# Train set without price col
+# Train set without price variable
 X = data.drop(['price'],axis='columns')
 
-# Train set price col
+# Train set price variable
 y = data.price
 
-
-xgb_model = XGBRegressor(random_state=1,objective='reg:squarederror',
-                         learning_rate = 0.07,
-                         max_depth = 3,
-                         colsample_bytree = 0.4,
-                         n_estimators = 150)
+X_train, X_test, y_train, y_test = train_test_split(
+      X, y, test_size=0.25, random_state=42)
 
 
+print(X_train.columns)
 
-# Fit model
-xgb_model.fit(X,y)
+model = XGBRegressor(random_state=1,objective='reg:squarederror',
+                         learning_rate = 0.1,
+                         max_depth = 6,
+                         colsample_bytree = 0.5,
+                         n_estimators =300)
 
-#Calculate error 
-mae = -1 * cross_val_score(xgb_model, X, y,
+
+model.fit(X_train, y_train)
+
+
+
+print("Model score: ",model.score(X_train,y_train))
+
+# Calculate error 
+mae_train = -1 * cross_val_score(model, X_train, y_train,
                                   cv=3,
                                   scoring='neg_mean_absolute_error')
 
 
-#Supress scientific notation
+mae_test = -1 * cross_val_score(model, X_test, y_test,
+                                  cv=3,
+                                  scoring='neg_mean_absolute_error')
+
+# Supress scientific notation
 pd.options.display.float_format = '{:.10f}'.format
 
+print("Mean absolute error CV train: ", mae_train.mean())
 
-print(mae.mean())
+print("Mean absolute error CV test: ", mae_test.mean())
 
+pickle.dump(model, open('model.pkl','wb'))
 
+with open("onehot_encoder", "wb") as f: 
+    pickle.dump(OH_encoder, f)
 
-submission_predictions =  xgb_model.predict(test)
-submission_predictions = np.exp(submission_predictions)
-print(submission_predictions)
-pickle.dump(xgb_model, open('model.pkl','wb'))
+with open("ordinal_encoder", "wb") as f: 
+    pickle.dump(ordinal_encoder, f)
 

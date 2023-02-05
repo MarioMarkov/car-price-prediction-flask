@@ -43,16 +43,34 @@ def predict():
     car = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], 
     'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],'euro':[euro]
     })
+    
+    car['kept'] = np.where(car['kms']<100000, 1, 0)
 
+    car = car.drop(['color'],axis='columns')
+    car = car.drop(['kms'],axis='columns')
+    car = car.drop(['euro'],axis='columns')
+
+
+    car["brand"] = car['brand'].astype(str) +"-"+ car["model"]
+
+    car = car.drop(['model'],axis='columns')
+
+
+    premium_brands = ["Porsche", "Audi","Mercedes-Benz","BMW"]
+
+    car['premium'] = np.where(car['brand'].isin(premium_brands), 1, 0)
+
+    # Flag for new cars
+    car['new'] = np.where(car['year']>2018, 1, 0)
+    
     # Ordinal Encoding
-
-    ordinal_enc_cols = ['brand','model','color','type']
+    ordinal_enc_cols = ['brand','type']
+    one_hot_columns = ['fuel']  
     ordinal_encoder = pickle.load(open('ordinal_encoder', 'rb'))
     car[ordinal_enc_cols] = ordinal_encoder.transform(car[ordinal_enc_cols])
 
 
     # One-Hot Encoding
-    one_hot_columns = ['fuel','euro']
     oh_encoder = pickle.load(open('onehot_encoder', 'rb'))
     oh_columns = pd.DataFrame(oh_encoder.transform(car[one_hot_columns])) 
 
@@ -64,9 +82,14 @@ def predict():
 
     # Add one-hot encoded columns to numerical features
     car = pd.concat([num_X_car, oh_columns], axis=1)
+
+   
+
+    
+
     prediction = pickled_model.predict(car)  # features Must be in the form [[a, b]]
 
-    output = np.exp(prediction[0])
+    output = prediction[0]
     output = int(output)
     return render_template('index.html', len = len(brands), brands = brands, prediction_text='Price  is {}'.format(output))
 
