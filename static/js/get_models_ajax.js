@@ -38,34 +38,9 @@ xhr.send();
       removeOptions(select);
 
       add_new_options(carModels,select)
-      
-    } else {
-      console.log("Error retrieving car models");
-    }
-  };
-
-// Make get request when brand changes
-e.addEventListener("change", function() {
-  var value = e.value;
-  var val = e.options[e.selectedIndex].text;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", `http://127.0.0.1:5000/get_brands/${val}`);
-  xhr.send();
-
-  //Handle the response
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      //Parse the JSON response
-      var carModels = JSON.parse(xhr.responseText).models;
-      //Get the select element
-      var select = document.getElementById("model");
-
-      removeOptions(select);
-
-      add_new_options(carModels,select)
 
     } else {
       console.log("Error retrieving car models");
     }
   };
-});
+
