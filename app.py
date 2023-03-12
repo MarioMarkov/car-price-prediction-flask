@@ -83,10 +83,6 @@ def predict():
     # Add one-hot encoded columns to numerical features
     car = pd.concat([num_X_car, oh_columns], axis=1)
 
-   
-
-    
-
     prediction = pickled_model.predict(car)  # features Must be in the form [[a, b]]
 
     output = prediction[0]

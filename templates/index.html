@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <script src="{{url_for('static', filename='js/get_models_ajax.js')}}"></script>
-    <title>Document</title>
+    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/custom.css')}}" rel="stylesheet">
+
+    <title>Za Kolko?</title>
 </head>
 <body>
-    <form  action="{{ url_for('predict') }}" method="post">
+  <aside class="text-gray-600 body-font">
+    <form action="">
+      <div>Choose Type of Model</div>
+    </form>
+  </aside>
+    <form   action="{{ url_for('predict') }}" method="post">
         <div class="form_title">
           Детайли за колата 
         </div>
