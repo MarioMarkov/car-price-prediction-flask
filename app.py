@@ -6,7 +6,7 @@ import pandas as pd
 import json
 import math
 from flask import jsonify
-
+import joblib
 
 
 #Create an app object using the Flask class. 
@@ -25,7 +25,9 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-    pickled_model = pickle.load(open('model.pkl', 'rb'))
+    
+    pickled_model = pickle.load(open('xgb_model.pkl', 'rb'))
+    #pickled_model = joblib.load('final_model')
 
     brand = str(request.form['brand'])
     model = str(request.form['model'])
@@ -44,10 +46,8 @@ def predict():
     'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],'euro':[euro]
     })
     
-    car['kept'] = np.where(car['kms']<100000, 1, 0)
+    #car['kept'] = np.where(car['kms']<100000, 1, 0)
 
-    car = car.drop(['color'],axis='columns')
-    car = car.drop(['kms'],axis='columns')
     car = car.drop(['euro'],axis='columns')
 
 
@@ -64,8 +64,8 @@ def predict():
     car['new'] = np.where(car['year']>2018, 1, 0)
     
     # Ordinal Encoding
-    ordinal_enc_cols = ['brand','type']
-    one_hot_columns = ['fuel']  
+    ordinal_enc_cols = ['brand','color']
+    one_hot_columns = ['fuel','type']  
     ordinal_encoder = pickle.load(open('ordinal_encoder', 'rb'))
     car[ordinal_enc_cols] = ordinal_encoder.transform(car[ordinal_enc_cols])
 
