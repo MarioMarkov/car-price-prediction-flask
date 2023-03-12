@@ -1,18 +1,19 @@
 import numpy as np
 from flask import Flask, request, render_template
 import pickle
-import sys
 import pandas as pd
 import json
-import math
 from flask import jsonify
-import joblib
 
+
+#pip install -r requirements.txt
+# To install all packages
 
 #Create an app object using the Flask class. 
 app = Flask(__name__)
 app.static_folder = 'static'
-#Load the trained model. (Pickle file)
+
+# Load dictionary with brands and their modules
 with open("brands_models.json", "r") as file:
     brands_models = json.load(file)
 
@@ -26,8 +27,12 @@ def home():
 @app.route('/predict',methods=['POST'])
 def predict():
     
-    pickled_model = pickle.load(open('xgb_model.pkl', 'rb'))
+    #pickled_model = pickle.load(open('xgb_model.pkl', 'rb'))
+    # With joblib it does not work 
+    # Important to install scikit-learn v 1.2.1
     #pickled_model = joblib.load('final_model')
+    pickled_model = pickle.load(open('final_model_pickle.pkl', 'rb'))
+
 
     brand = str(request.form['brand'])
     model = str(request.form['model'])
@@ -50,7 +55,6 @@ def predict():
 
     car = car.drop(['euro'],axis='columns')
 
-
     car["brand"] = car['brand'].astype(str) +"-"+ car["model"]
 
     car = car.drop(['model'],axis='columns')
@@ -68,7 +72,6 @@ def predict():
     one_hot_columns = ['fuel','type']  
     ordinal_encoder = pickle.load(open('ordinal_encoder', 'rb'))
     car[ordinal_enc_cols] = ordinal_encoder.transform(car[ordinal_enc_cols])
-
 
     # One-Hot Encoding
     oh_encoder = pickle.load(open('onehot_encoder', 'rb'))

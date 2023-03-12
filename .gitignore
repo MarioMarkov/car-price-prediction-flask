@@ -18,4 +18,8 @@
 
 onehot_encoder
 ordinal_encoder
-__pycache__/app.cpython-310.pyc
+__pycache__/
+
+final_model
+
+.DS_Store
