@@ -85,17 +85,7 @@ def predict():
 
     # Add one-hot encoded columns to numerical features
     car = pd.concat([num_X_car, oh_columns], axis=1)
-    
-    def make_buckets(df):
-        bins = [0,50000, 100000, 150000,200000,250000,300000,400000,500000,600000]
-        labels = [1,2,3,4,5,6,7,8,9]
-        df['kms'] = pd.cut(x = df['kms'], bins = bins, labels = labels, include_lowest = True)
-        return df
 
-    car = make_buckets(car)
-
-    car["kms"] = car["kms"].astype("int32")
-    
     prediction = pickled_model.predict(car)  # features Must be in the form [[a, b]]
 
     output = prediction[0]
