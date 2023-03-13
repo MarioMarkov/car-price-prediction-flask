@@ -5,9 +5,9 @@ import pandas as pd
 import json
 from flask import jsonify
 
-
-#pip install -r requirements.txt
 # To install all packages
+# Install xgboost from conda
+#pip install -r requirements.txt
 
 #Create an app object using the Flask class. 
 app = Flask(__name__)
