@@ -6,30 +6,8 @@ body {
     background-attachment: fixed;
     background-size: cover;
     font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 15px;
   }
-  
-  
-  form {
-    width: 40%; /* set the width of the form */
-    margin: 0 auto; /* center the form on the page */
-    padding: 20px; /* add some padding to the form */
-    background-color: #ffffff; /* set a background color for the form */
-    border: 1px solid rgb(224, 223, 223); /* add a border around the form */
-    border-radius: 10px; /* add rounded corners to the form */
-  }
-  
-  .form_title{
-      color: #f0a500;
-      padding: 2rem;
-      font-size: 30px;
-      text-align: center;
-  }
-  
-  .form_contents{
-      padding-left: 3rem;
-  }
-  
+
   
   label {
     font-weight: bold; /* make the label text bold */

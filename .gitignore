@@ -25,3 +25,4 @@ final_model
 .DS_Store
 
 /node_modules
+client_secrets.json

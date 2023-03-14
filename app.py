@@ -1,10 +1,10 @@
-import numpy as np
-from flask import Flask, request, render_template
-import pickle
-import pandas as pd
 import json
-from flask import jsonify
+import pickle
+import numpy as np
+import pandas as pd
 
+from flask import jsonify
+from flask import Flask, request, render_template
 
 #pip install -r requirements.txt
 # To install all packages
@@ -12,6 +12,7 @@ from flask import jsonify
 #Create an app object using the Flask class. 
 app = Flask(__name__)
 app.static_folder = 'static'
+
 
 # Load dictionary with brands and their modules
 with open("brands_models.json", "r") as file:
@@ -31,6 +32,7 @@ def predict():
     # With joblib it does not work 
     # Important to install scikit-learn v 1.2.1
     #pickled_model = joblib.load('final_model')
+    
     pickled_model = pickle.load(open('final_model_pickle.pkl', 'rb'))
 
 
@@ -46,6 +48,7 @@ def predict():
     displacement = float(request.form['displacement'])
     hp = float(request.form['hp'])
     euro = float(request.form['euro'])
+    ml_model = str(request.form['ml_model_hidden'])
 
     car = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], 
     'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],'euro':[euro]
@@ -90,7 +93,7 @@ def predict():
 
     output = prediction[0]
     output = int(output)
-    return render_template('index.html', len = len(brands), brands = brands, prediction_text='Price  is {}'.format(output))
+    return render_template('index.html', len = len(brands), brands = brands, prediction_text='Price  is {} and model {}'.format(output,ml_model))
 
 @app.route("/get_brands/<brand>", methods=["GET"])
 def get_brands(brand):

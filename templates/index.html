@@ -5,22 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="{{url_for('static', filename='js/get_models_ajax.js')}}"></script>
-    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
-    <link href="{{url_for('static',filename='css/custom.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
 
     <title>Za Kolko?</title>
 </head>
 <body>
-  <aside class="text-gray-600 body-font">
-    <form action="">
-      <div>Choose Type of Model</div>
-    </form>
-  </aside>
-    <form   action="{{ url_for('predict') }}" method="post">
-        <div class="form_title">
+
+  <div class="flex flex-col items-center justify-between gap-10 m-2 md:flex-row md:items-start">
+    <div id="sidebar" class="md:basis-1/4 container ">
+      <div class="bg-white rounded p-4 container border-2 border-orangy">
+        <h3 class="text-center">
+          Choose Type of model
+        </h3>
+        <form name="model_select">
+        <input id= "dt_model" type="radio" name="ml_model" checked id="dt" value="dt">
+        <label for="dt">Decission Tree</label><br>
+        <input id= "nn_model" type="radio" name="ml_model" id="nn" value="nn">
+        <label for="nn">Neural network</label><br>
+      </form>
+      </div>
+    </div>
+
+    <section id="main-form" class="basis-3/4 container">
+      <form  action="{{ url_for('predict') }}" 
+      method="post"
+      class="bg-white p-3 rounded border-2 border-orangy md:w-8/12 ">
+        <div class="p-10 text-center text-orangy text-4xl">
           Детайли за колата 
         </div>
-        <div class="form_contents">
+        <div class="">
+          <input id="hidden_model_input" type="hidden" name="ml_model_hidden">
           <label for="brand">Марка:</label> <br>
           <select id="brand" name="brand">
             {%for i in range(0, len)%}
@@ -122,87 +137,8 @@
 
       </form> 
       <h4>{{ prediction_text }}</h4>
-</body>
-
-<script>
+    </section>
+  </div>
   
-var e = document.getElementById("brand");
-
-// Make get request when it first loads
-var value = e.value;
-var val = e.options[e.selectedIndex].text;
-var xhr = new XMLHttpRequest();
-xhr.open("GET", `http://127.0.0.1:5000/get_brands/${val}`);
-xhr.send();
-
- //Handle the response
- xhr.onload = function() {
-    if (xhr.status === 200) {
-      //Parse the JSON response
-      var carModels = JSON.parse(xhr.responseText).models;
-      //Get the select element
-      var select = document.getElementById("model");
-      function removeOptions(selectElement) {
-          var i, L = selectElement.options.length - 1;
-          for(i = L; i >= 0; i--) {
-              selectElement.remove(i);
-          }
-        }
-      removeOptions(select);
-
-
-      //Loop through the car models and add them as options to the select element
-      for (var i = 0; i < carModels.length; i++) {
-        var option = document.createElement("option");
-        option.text = carModels[i];
-        
-        select.add(option);
-      }
-
-    } else {
-      console.log("Error retrieving car models");
-    }
-  };
-
-// Make get request when brand changes
-e.addEventListener("change", function() {
-  var value = e.value;
-  var val = e.options[e.selectedIndex].text;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", `http://127.0.0.1:5000/get_brands/${val}`);
-  xhr.send();
-
-  //Handle the response
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      //Parse the JSON response
-      var carModels = JSON.parse(xhr.responseText).models;
-      //Get the select element
-      var select = document.getElementById("model");
-      function removeOptions(selectElement) {
-          var i, L = selectElement.options.length - 1;
-          for(i = L; i >= 0; i--) {
-              selectElement.remove(i);
-          }
-        }
-      removeOptions(select);
-
-
-      //Loop through the car models and add them as options to the select element
-      for (var i = 0; i < carModels.length; i++) {
-        var option = document.createElement("option");
-        option.text = carModels[i];
-        
-        select.add(option);
-      }
-
-    } else {
-      console.log("Error retrieving car models");
-    }
-  };
-});
-
-
-
-</script>
+</body>
 </html>
