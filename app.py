@@ -3,11 +3,16 @@ import pickle
 import numpy as np
 import pandas as pd
 
+<<<<<<< HEAD
 from flask import jsonify
 from flask import Flask, request, render_template
 
 #pip install -r requirements.txt
+=======
+>>>>>>> 15743a0d3cea86f4d4e1774271486f334cad500b
 # To install all packages
+# Install xgboost from conda
+#pip install -r requirements.txt
 
 #Create an app object using the Flask class. 
 app = Flask(__name__)
