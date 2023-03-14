@@ -1,18 +1,17 @@
 import json
 import pickle
+import helpers
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
-<<<<<<< HEAD
 from flask import jsonify
 from flask import Flask, request, render_template
 
 #pip install -r requirements.txt
-=======
->>>>>>> 15743a0d3cea86f4d4e1774271486f334cad500b
 # To install all packages
 # Install xgboost from conda
-#pip install -r requirements.txt
+# pip install -r requirements.txt
 
 #Create an app object using the Flask class. 
 app = Flask(__name__)
@@ -25,6 +24,7 @@ with open("brands_models.json", "r") as file:
 
 brands  = list(brands_models.keys())
 
+
 @app.route('/')
 def home():
     return render_template('index.html', len = len(brands), brands = brands)
@@ -33,12 +33,12 @@ def home():
 @app.route('/predict',methods=['POST'])
 def predict():
     
-    #pickled_model = pickle.load(open('xgb_model.pkl', 'rb'))
+    #pickled_model = pickle.load(open('pickles/xgb_model.pkl', 'rb'))
     # With joblib it does not work 
     # Important to install scikit-learn v 1.2.1
-    #pickled_model = joblib.load('final_model')
-    
-    pickled_model = pickle.load(open('final_model_pickle.pkl', 'rb'))
+    tf_model = tf.keras.models.load_model('saved_model/my_model')
+
+    pickled_model = pickle.load(open('pickles/final_model_pickle.pkl', 'rb'))
 
 
     brand = str(request.form['brand'])
@@ -59,46 +59,47 @@ def predict():
     'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],'euro':[euro]
     })
     
-    #car['kept'] = np.where(car['kms']<100000, 1, 0)
-
     car = car.drop(['euro'],axis='columns')
-
     car["brand"] = car['brand'].astype(str) +"-"+ car["model"]
 
     car = car.drop(['model'],axis='columns')
 
-
     premium_brands = ["Porsche", "Audi","Mercedes-Benz","BMW"]
 
     car['premium'] = np.where(car['brand'].isin(premium_brands), 1, 0)
+    
+    car = helpers.make_buckets(car)
+    
+    car_tf = car.copy()
 
-    # Flag for new cars
+    # Flag for new cars only for decission trees
     car['new'] = np.where(car['year']>2018, 1, 0)
     
     # Ordinal Encoding
     ordinal_enc_cols = ['brand','color']
     one_hot_columns = ['fuel','type']  
-    ordinal_encoder = pickle.load(open('ordinal_encoder', 'rb'))
-    car[ordinal_enc_cols] = ordinal_encoder.transform(car[ordinal_enc_cols])
-
-    # One-Hot Encoding
-    oh_encoder = pickle.load(open('onehot_encoder', 'rb'))
-    oh_columns = pd.DataFrame(oh_encoder.transform(car[one_hot_columns])) 
-
-    # One-hot encoding removed index; put it back
-    oh_columns.index = car.index
-
-    # Remove categorical columns (will replace with one-hot encoding)
-    num_X_car = car.drop(one_hot_columns, axis=1)
-
-    # Add one-hot encoded columns to numerical features
-    car = pd.concat([num_X_car, oh_columns], axis=1)
+    
+    ordinal_encoder = pickle.load(open('pickles/ordinal_encoder', 'rb'))
+    oh_encoder = pickle.load(open('pickles/onehot_encoder', 'rb'))
+    
+    car = helpers.encode(car, 
+                    oh_encoder=oh_encoder,
+                    ordinal_encoder=ordinal_encoder,
+                    ordinal_columns=ordinal_enc_cols,
+                    oh_columns=one_hot_columns)
+    
+    car_tf = helpers.encode(car_tf, 
+                    oh_encoder=oh_encoder,
+                    ordinal_encoder=ordinal_encoder,
+                    ordinal_columns=ordinal_enc_cols,
+                    oh_columns=one_hot_columns)
+    
 
     prediction = pickled_model.predict(car)  # features Must be in the form [[a, b]]
-
-    output = prediction[0]
-    output = int(output)
-    return render_template('index.html', len = len(brands), brands = brands, prediction_text='Price  is {} and model {}'.format(output,ml_model))
+    prediction_tf = tf_model.predict(car_tf)
+    output = int(prediction[0])
+    output_tf = int(prediction_tf[0])
+    return render_template('index.html', len = len(brands), brands = brands, prediction_text='Price  is {} and tf_model {}'.format(output,output_tf))
 
 @app.route("/get_brands/<brand>", methods=["GET"])
 def get_brands(brand):
