@@ -13,6 +13,8 @@ from flask import Flask, request, render_template
 # Install xgboost from conda
 # pip install -r requirements.txt
 
+
+
 #Create an app object using the Flask class. 
 app = Flask(__name__)
 app.static_folder = 'static'
@@ -36,7 +38,7 @@ def predict():
     #pickled_model = pickle.load(open('pickles/xgb_model.pkl', 'rb'))
     # With joblib it does not work 
     # Important to install scikit-learn v 1.2.1
-    tf_model = tf.keras.models.load_model('saved_model/my_model')
+    tf_model = tf.keras.models.load_model('./saved_model/my_model')
 
     pickled_model = pickle.load(open('pickles/final_model_pickle.pkl', 'rb'))
 
@@ -69,11 +71,12 @@ def predict():
     car['premium'] = np.where(car['brand'].isin(premium_brands), 1, 0)
     
     car = helpers.make_buckets(car)
-    
+
+    car['new'] = np.where(car['year']>2018, 1, 0)
+
     car_tf = car.copy()
 
     # Flag for new cars only for decission trees
-    car['new'] = np.where(car['year']>2018, 1, 0)
     
     # Ordinal Encoding
     ordinal_enc_cols = ['brand','color']
