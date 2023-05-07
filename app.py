@@ -4,7 +4,7 @@ import helpers
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-
+from vertex_model import get_value_vertex_model
 from flask import jsonify
 from flask import Flask, request, render_template
 
@@ -12,8 +12,6 @@ from flask import Flask, request, render_template
 # To install all packages
 # Install xgboost from conda
 # pip install -r requirements.txt
-
-
 
 #Create an app object using the Flask class. 
 app = Flask(__name__)
@@ -55,11 +53,22 @@ def predict():
     displacement = float(request.form['displacement'])
     hp = float(request.form['hp'])
     euro = float(request.form['euro'])
-    ml_model = str(request.form['ml_model_hidden'])
+    #ml_model = str(request.form['ml_model_hidden'])
 
     car = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], 
     'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],'euro':[euro]
     })
+    
+    car_vertex = {
+        "instances": [
+            { 
+            "_2door": door_2,"brand": brand,"color": color,"displacement": int(displacement),
+            "fuel": fuel,"hp": int(hp),"kms": kms,"model": model, "transmission": transmission,
+            "type": type_car,"year": str(year)
+            }
+        ]
+    }
+    print(car_vertex)
     
     car = car.drop(['euro'],axis='columns')
     car["brand"] = car['brand'].astype(str) +"-"+ car["model"]
@@ -100,9 +109,20 @@ def predict():
 
     prediction = pickled_model.predict(car)  # features Must be in the form [[a, b]]
     prediction_tf = tf_model.predict(car_tf)
+
+
+    
+
     output = int(prediction[0])
     output_tf = int(prediction_tf[0])
-    return render_template('index.html', len = len(brands), brands = brands, prediction_text='Price  is {} and tf_model {}'.format(output,output_tf))
+    output_vertex = int(get_value_vertex_model(car_vertex))
+
+    return render_template(
+        'index.html', 
+        len = len(brands),
+        brands = brands, 
+        prediction_text='Price  is '+ str(output)+ 'and tf_model' +str(output_tf)+ ' Vertex: '+
+        str(output_vertex))
 
 @app.route("/get_brands/<brand>", methods=["GET"])
 def get_brands(brand):
