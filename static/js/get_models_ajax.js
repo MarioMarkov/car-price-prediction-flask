@@ -4,7 +4,7 @@ window.onload=function(){
   var value = e.value;
   var val = e.options[e.selectedIndex].text;
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", `${RAILWAY_STATIC_URL}/get_brands/${val}`);
+  xhr.open("GET", `${process.env.RAILWAY_STATIC_URL}/get_brands/${val}`);
   xhr.send();
   
    //Handle the response
@@ -41,7 +41,7 @@ window.onload=function(){
     var value = e.value;
     var val = e.options[e.selectedIndex].text;
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", `${RAILWAY_STATIC_URL}/get_brands/${val}`);
+    xhr.open("GET", `${process.env.RAILWAY_STATIC_URL}/get_brands/${val}`);
     xhr.send();
   
     //Handle the response
