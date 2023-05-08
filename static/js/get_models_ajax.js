@@ -1,5 +1,3 @@
-
-
 window.onload=function(){
   var e = document.getElementById("brand");
   // Make get request when it first loads

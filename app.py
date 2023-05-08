@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from flask import jsonify
 from flask import Flask, request, render_template, redirect, url_for
-
+import os
 #pip install -r requirements.txt
 # To install all packages
 # Install xgboost from conda
@@ -16,7 +16,6 @@ from flask import Flask, request, render_template, redirect, url_for
 app = Flask(__name__, template_folder="templates")
 app.static_folder = 'static'
 app.secret_key = 'secret'
-
 
 # Load dictionary with brands and their modules
 with open("brands_models.json", "r") as file:
@@ -115,4 +114,5 @@ def get_brands(brand):
 
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, port=port)
