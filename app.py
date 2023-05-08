@@ -15,7 +15,7 @@ from flask import Flask, request, render_template, redirect, session, url_for, f
 #Create an app object using the Flask class. 
 app = Flask(__name__)
 app.static_folder = 'static'
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = 'secret'
 
 
 # Load dictionary with brands and their modules
