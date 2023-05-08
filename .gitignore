@@ -13,7 +13,6 @@
 
 # Built Visual Studio Code Extensions
 *.vsix
-*.html
 *.csv
 *.pkl
 
