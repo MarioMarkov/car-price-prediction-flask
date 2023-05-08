@@ -33,7 +33,7 @@ def make_buckets(data):
   return data
 
 def basic_preprocessing(car: pd.DataFrame) -> pd.DataFrame:
-  car = car.drop(['euro'],axis='columns')
+  #car = car.drop(['euro'],axis='columns')
   premium_brands = ["Porsche", "Audi","Mercedes-Benz","BMW"]
   car['premium'] = np.where(car['brand'].isin(premium_brands), 1, 0)
   car = make_buckets(car)
@@ -90,10 +90,11 @@ def extract_features(request : Request)-> pd.DataFrame:
   type_car = str(request.form['type'])
   displacement = float(request.form['displacement'])
   hp = float(request.form['hp'])
-  euro = float(request.form['euro'])
+  #euro = float(request.form['euro'])
 
   car = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], 
-    'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],'euro':[euro]
+    'transmission':  [transmission],'2door': [door_2],'color':[color],'type':[type_car],'displacement':[displacement],'hp':[hp],
+    #'euro':[euro]
   })
   return car
 

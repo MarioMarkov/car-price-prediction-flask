@@ -76,24 +76,14 @@ window.onload=function(){
     };
   });
 
-  
-  
-  // Set hidden input to a value 
-  ml_model_input = document.getElementById("hidden_model_input")
-  dt_model = document.getElementById("dt_model")
-  nn_model = document.getElementById("nn_model")
-  if(dt_model.checked){
-    ml_model_input.value = "dt"
-  }else{
-    ml_model_input.value = "nn"
-  }
-  console.log(ml_model_input.value)
-  var radios = document.forms["model_select"].elements["ml_model"];
-  for(var i = 0, max = radios.length; i < max; i++) {
-      radios[i].onclick = function() {
-        ml_model_input.value = this.value
-        console.log(ml_model_input.value)
-      }
-  }
 };
+
+setTimeout(function() {
+  var alert = document.getElementById('alert-success');
+  if (alert) {
+      alert.style.display = 'none';
+  }
+}, 3000);
+
+
 

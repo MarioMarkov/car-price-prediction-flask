@@ -5,70 +5,73 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="{{url_for('static', filename='js/get_models_ajax.js')}}"></script>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}"> 
+    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
 
     <title>Za Kolko?</title>
 </head>
 <body>
-
-  <div class="flex flex-col items-center justify-between gap-10 m-2 md:flex-row md:items-start">
-    <div id="sidebar" class="md:basis-1/4 container ">
-      
+  <div class="w-[50%] mx-auto my-5">
+    {% if alert %}
+    <div id="alert-success" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
+      <span class="font-medium">Успешно гласуване за модел : {{ vote_model }}!</span> 
     </div>
-
-    <section id="main-form" class="basis-3/4 container">
+    {% endif %}
+    
       <form  action="{{ url_for('predict') }}" 
+      
       method="post"
-      class="bg-white p-3 rounded border-2 border-orangy md:w-8/12 ">
-        <div class="p-10 text-center text-orangy text-4xl">
+      class="bg-white p-3 rounded border-2 border-orangy ">
+
+
+        <div class="p-8 text-center text-orangy text-4xl">
           Детайли за колата 
         </div>
+
         <div class="">
-          <input id="hidden_model_input" type="hidden" name="ml_model_hidden">
-          <label for="brand">Марка:</label> <br>
-          <select id="brand" name="brand">
+          
+          <label for="brand" class="block mb-1 text-sm font-medium text-gray-900 ">Марка:</label>
+          <select placeholder="Марка" id="brand" name="brand"  class="mb-2  bg-white-50 border border-gray-300 text-orangy-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " value="{{ brand }}">
             {%for i in range(0, len)%}
               <option value={{brands[i]}}> {{brands[i]}} </option>
             {%endfor%}
-          </select> <br>
-      
-  
-          <label for="model">Модел:</label><br>
-          <select id="model" name="model">
-          </select>
-  
-          <br>
-          <label for="year">Година:</label><br>
-          <input type="number" id="year" name="year">
-          <br>
-          <label for="fuel">Гориво:</label><br>
-          <select id="fuel" name="fuel">
-            <option value="p">Бензин</option>
-            <option value="d">Дизел</option>
-            <option value="g">Газ/Бензин</option>
-            <option value="m">Метан/Бензин</option>
-            <option value="e">Електричество</option>
-            <option value="h">Хибрид</option>
-          </select>
-          <br>
-          <label for="kms">Километри:</label><br>
-          <input type="number" id="kms" name="kms">
-          <br>
-          <label for="transmission">Трансмисия:</label><br>
-          <select id="transmission" name="transmission">
-            <option value="0">Ръчни скорости</option>
-            <option value="1">Автоматични скорости</option>
-          </select>
-          <br>
-          <label for="2door">Врати:</label><br>
-          <select id="2door" name="2door">
+          </select> 
+
+        <label for="model" class="block mb-1 text-sm font-medium text-gray-900">Модел:</label>
+        <select id="model" value="{{ model }}" name="model" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        </select>
+        
+        <label for="year" class="block mb-1 text-sm font-medium text-gray-900">Година:</label>
+        <input type="number" value="{{ year }}" id="year" name="year" class=" mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                  
+        <label for="fuel" class="block mb-1 text-sm font-medium text-gray-900">Гориво:</label>
+        <select id="fuel" name="fuel" value="{{ fuel }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"> 
+          <option value="p">Бензин</option>
+          <option value="d">Дизел</option>
+          <option value="g">Газ/Бензин</option>
+          <option value="m">Метан/Бензин</option>
+          <option value="e">Електричество</option>
+          <option value="h">Хибрид</option>
+        </select>
+
+        <label for="kms" class="block mb-1 text-sm font-medium text-gray-900">Километри:</label>
+        <input type="number" id="kms" name="kms" value="{{ kms }}" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+
+        <label for="transmission" class="block mb-1 text-sm font-medium text-gray-900">Трансмисия:</label>
+        <select id="transmission" name="transmission" value="{{ transmission }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+          <option value="0">Ръчни скорости</option>
+          <option value="1">Автоматични скорости</option>
+        </select>
+
+
+          <label for="2door" class="block mb-1 text-sm font-medium text-gray-900">Врати:</label>
+          <select id="2door" name="2door" value="{{ door_2 }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             <option value="0">4 врати</option>
             <option value="1">2 врати</option>
           </select>
-          <br>
-          <label for="color">Цвят:</label><br>
-          <select id="color" name="color">
+
+          <label for="color" class="block mb-1 text-sm font-medium text-gray-900">Цвят:</label>
+          <select id="color" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="color" value="{{ color }}">
             <option value="blue">син</option>
             <option value="white">бял</option>
             <option value="black">черен</option>
@@ -90,11 +93,9 @@
             <option value="pink">розов</option>
             <option value="chameleon">хамелеон</option>
   
-          </select>
-          <br>
-  
-          <label for="type">Тип:</label><br>
-          <select id="type" name="type">
+          </select>  
+          <label for="type" class="block mb-1 text-sm font-medium text-gray-900">Тип:</label>   
+          <select id="type" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="type" value="{{ type }}">
             <option value="sedan">седан</option>
             <option value="hatchback">хечбек</option>
             <option value="combi">комби</option>
@@ -104,30 +105,29 @@
             <option value="pickup">пикап</option>
             <option value="van">ван</option>
           </select>
-          <br>
-          <label for="displacement">Обем на двигателя:</label><br>
-          <input type="number" id="displacement" name="displacement">
-          <br>
-          <label for="hp">Консики сили:</label><br>
-          <input type="number" id="hp" name="hp">
-          <br>
-          <label for="euro">Евро Рейтинг:</label><br>
-          <select id="euro" name="euro">
+          <label for="displacement" class="block mb-1 text-sm font-medium text-gray-900">Обем на двигателя:</label>   
+          <input type="number" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="displacement" name="displacement" value="{{ displacement }}">
+         
+          <label for="hp" class="block mb-1 text-sm font-medium text-gray-900">Консики сили:</label>   
+          <input type="number" class=" mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="hp" name="hp" value="{{ hp }}">
+          
+          <!-- <label for="euro" class="block mb-1 text-sm font-medium text-gray-900">Евро Рейтинг:</label>   
+          <select id="euro"  class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="euro" value="{{ euro }}">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
             <option value="6">6</option>
-          </select>
-          <br>
-          <input type="submit" value="Submit">
+          </select> -->
+          <input type="submit" value="Submit"
+          class="bg-orangy block text-center w-full p-3 mt-3 text-white rounded-md
+          cursor-pointer">
         </div> <!-- form_contents -->
         
 
       </form> 
-      <h4>{{ prediction_text }}</h4>
-    </section>
+      <!-- <h4>{{ prediction_text }}</h4> -->
   </div>
   
 </body>
