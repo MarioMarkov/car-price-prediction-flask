@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{url_for('static', filename='js/get_models_ajax.js')}}"></script>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}"> 
-    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
+{% extends 'base.html' %}
 
-    <title>Za Kolko?</title>
-</head>
-<body>
+{% block content %}
   <div class="w-[50%] mx-auto my-5">
     {% if alert %}
     <div id="alert-success" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
@@ -130,5 +120,4 @@
       <!-- <h4>{{ prediction_text }}</h4> -->
   </div>
   
-</body>
-</html>
+  {% endblock %}
