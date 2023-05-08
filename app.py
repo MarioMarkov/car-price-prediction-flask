@@ -13,7 +13,7 @@ from flask import Flask, request, render_template, redirect, session, url_for, f
 # run npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch
 
 #Create an app object using the Flask class. 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="template")
 app.static_folder = 'static'
 app.secret_key = 'secret'
 
@@ -115,4 +115,4 @@ def get_brands(brand):
 
 
 if __name__ == "__main__":
-    app.run(host ="0.0.0.0", port = 5000 , debug=True)
+    app.run()
