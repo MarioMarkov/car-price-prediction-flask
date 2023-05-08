@@ -13,7 +13,7 @@ from flask import Flask, request, render_template, redirect, session, url_for, f
 # run npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch
 
 #Create an app object using the Flask class. 
-app = Flask(__name__, template_folder="template")
+app = Flask(__name__)
 app.static_folder = 'static'
 app.secret_key = 'secret'
 
