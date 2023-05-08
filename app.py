@@ -3,7 +3,7 @@ import helpers
 import numpy as np
 import pandas as pd
 from flask import jsonify
-from flask import Flask, request, render_template, redirect, session, url_for, flash
+from flask import Flask, request, render_template, redirect, url_for
 
 #pip install -r requirements.txt
 # To install all packages
@@ -13,7 +13,7 @@ from flask import Flask, request, render_template, redirect, session, url_for, f
 # run npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch
 
 #Create an app object using the Flask class. 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 app.static_folder = 'static'
 app.secret_key = 'secret'
 
