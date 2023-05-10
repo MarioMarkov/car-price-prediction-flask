@@ -14,20 +14,10 @@
 # Built Visual Studio Code Extensions
 *.vsix
 *.csv
-*.pkl
 
-onehot_encoder
-ordinal_encoder
 __pycache__/
-
-final_model
 
 .DS_Store
 
 /node_modules
 client_secrets.json
-saved_model/my_model/fingerprint.pb
-saved_model/my_model/keras_metadata.pb
-saved_model/my_model/saved_model.pb
-saved_model/my_model/variables/variables.data-00000-of-00001
-saved_model/my_model/variables/variables.index

@@ -4,7 +4,8 @@ window.onload=function(){
   var value = e.value;
   var val = e.options[e.selectedIndex].text;
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", `https://carspredictweb-production.up.railway.app//get_brands/${val}`);
+  //${process.env.RAILWAY_STATIC_URL}
+  xhr.open("GET", `https://carspredictweb-production.up.railway.app/get_brands/${val}`);
   xhr.send();
   
    //Handle the response
