@@ -21,3 +21,5 @@ __pycache__/
 
 /node_modules
 client_secrets.json
+
+.ipyn
