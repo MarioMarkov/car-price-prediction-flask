@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="w-[50%] mx-auto my-5">
+  <div class="w-[80%]  md:w-[60%] mx-auto my-5">
     {% if alert %}
     <div id="alert-success" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
       <span class="font-medium">Успешно гласуване за модел : {{ vote_model }}!</span> 
@@ -11,7 +11,7 @@
       <form  action="{{ url_for('predict') }}" 
       
       method="post"
-      class="bg-white p-3 rounded border-2 border-orangy ">
+      class="bg-white p-3 rounded-xl border-2 border-orangy ">
 
 
         <div class="p-8 text-center text-orangy text-4xl">
@@ -32,7 +32,7 @@
         </select>
         
         <label for="year" class="block mb-1 text-sm font-medium text-gray-900">Година:</label>
-        <input type="number" value="{{ year }}" id="year" name="year" class=" mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        <input value=2000 type="number" value="{{ year }}" id="year" name="year" class=" mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                   
         <label for="fuel" class="block mb-1 text-sm font-medium text-gray-900">Гориво:</label>
         <select id="fuel" name="fuel" value="{{ fuel }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"> 
@@ -45,7 +45,7 @@
         </select>
 
         <label for="kms" class="block mb-1 text-sm font-medium text-gray-900">Километри:</label>
-        <input type="number" id="kms" name="kms" value="{{ kms }}" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        <input value=100000 type="number" id="kms" name="kms" value="{{ kms }}" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
 
         <label for="transmission" class="block mb-1 text-sm font-medium text-gray-900">Трансмисия:</label>
         <select id="transmission" name="transmission" value="{{ transmission }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -96,10 +96,10 @@
             <option value="van">ван</option>
           </select>
           <label for="displacement" class="block mb-1 text-sm font-medium text-gray-900">Обем на двигателя:</label>   
-          <input type="number" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="displacement" name="displacement" value="{{ displacement }}">
+          <input value=1400 type="number" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="displacement" name="displacement" value="{{ displacement }}">
          
           <label for="hp" class="block mb-1 text-sm font-medium text-gray-900">Консики сили:</label>   
-          <input type="number" class=" mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="hp" name="hp" value="{{ hp }}">
+          <input value=100 type="number" class=" mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="hp" name="hp" value="{{ hp }}">
           
           <!-- <label for="euro" class="block mb-1 text-sm font-medium text-gray-900">Евро Рейтинг:</label>   
           <select id="euro"  class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="euro" value="{{ euro }}">

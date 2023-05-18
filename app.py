@@ -25,11 +25,13 @@ brands  = list(brands_models.keys())
 
 @app.route('/',methods=['GET'])
 def home():
+    flask_env = os.environ.get('FLASK_ENV')
     # if(hasattr(request.args['alert']))
     # alert = json.loads(request.args['alert'])  # counterpart for url_for()
     # if(alert){
     #     print(alert)
     # }
+    print("ENV_VAraIABASD:",flask_env)
     if 'alert' in request.args and 'vote_model' in request.args:
         alert = request.args['alert']
         vote_model = request.args['vote_model']
