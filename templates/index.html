@@ -4,7 +4,7 @@
   <div class="w-[80%]  md:w-[60%] mx-auto my-5">
     {% if alert %}
     <div id="alert-success" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
-      <span class="font-medium">Успешно гласуване за модел : {{ vote_model }}!</span> 
+      <span class="font-medium">Sucessfully voted for <b>{{ vote_model }}</b> model!</span> 
     </div>
     {% endif %}
     
@@ -13,92 +13,98 @@
       method="post"
       class="bg-white p-3 rounded-xl border-2 border-orangy ">
 
+      <!-- <div class="float-right text-right">
+        <button class="p-2">BG</button> <button>EN</button>
+      </div> -->
+      
 
         <div class="p-8 text-center text-orangy text-4xl">
-          Детайли за колата 
+          Details for the car
         </div>
+
+        
 
         <div class="">
           
-          <label for="brand" class="block mb-1 text-sm font-medium text-gray-900 ">Марка:</label>
+          <label for="brand" class="block mb-1 text-sm font-medium text-gray-900 ">Brand:</label>
           <select placeholder="Марка" id="brand" name="brand"  class="mb-2  bg-white-50 border border-gray-300 text-orangy-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " value="{{ brand }}">
             {%for i in range(0, len)%}
               <option value={{brands[i]}}> {{brands[i]}} </option>
             {%endfor%}
           </select> 
 
-        <label for="model" class="block mb-1 text-sm font-medium text-gray-900">Модел:</label>
+        <label for="model" class="block mb-1 text-sm font-medium text-gray-900">Model:</label>
         <select id="model" value="{{ model }}" name="model" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         </select>
         
-        <label for="year" class="block mb-1 text-sm font-medium text-gray-900">Година:</label>
+        <label for="year" class="block mb-1 text-sm font-medium text-gray-900">Year:</label>
         <input value=2000 type="number" value="{{ year }}" id="year" name="year" class=" mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                   
-        <label for="fuel" class="block mb-1 text-sm font-medium text-gray-900">Гориво:</label>
+        <label for="fuel" class="block mb-1 text-sm font-medium text-gray-900">Fuel:</label>
         <select id="fuel" name="fuel" value="{{ fuel }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"> 
-          <option value="p">Бензин</option>
-          <option value="d">Дизел</option>
-          <option value="g">Газ/Бензин</option>
-          <option value="m">Метан/Бензин</option>
-          <option value="e">Електричество</option>
-          <option value="h">Хибрид</option>
+          <option value="p">Benzin</option>
+          <option value="d">Diesel</option>
+          <option value="g">Gas/Benzin</option>
+          <option value="m">Methane/Benzin</option>
+          <option value="e">Electric</option>
+          <option value="h">Hybrid</option>
         </select>
 
-        <label for="kms" class="block mb-1 text-sm font-medium text-gray-900">Километри:</label>
+        <label for="kms" class="block mb-1 text-sm font-medium text-gray-900">Kilometers:</label>
         <input value=100000 type="number" id="kms" name="kms" value="{{ kms }}" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
 
-        <label for="transmission" class="block mb-1 text-sm font-medium text-gray-900">Трансмисия:</label>
+        <label for="transmission" class="block mb-1 text-sm font-medium text-gray-900">Transmission:</label>
         <select id="transmission" name="transmission" value="{{ transmission }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-          <option value="0">Ръчни скорости</option>
-          <option value="1">Автоматични скорости</option>
+          <option value="0">Manual </option>
+          <option value="1">Automatic</option>
         </select>
 
 
-          <label for="2door" class="block mb-1 text-sm font-medium text-gray-900">Врати:</label>
+          <label for="2door" class="block mb-1 text-sm font-medium text-gray-900">Doors:</label>
           <select id="2door" name="2door" value="{{ door_2 }}" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-            <option value="0">4 врати</option>
-            <option value="1">2 врати</option>
+            <option value="0">4 doors</option>
+            <option value="1">2 doors</option>
           </select>
 
-          <label for="color" class="block mb-1 text-sm font-medium text-gray-900">Цвят:</label>
+          <label for="color" class="block mb-1 text-sm font-medium text-gray-900">Color:</label>
           <select id="color" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="color" value="{{ color }}">
-            <option value="blue">син</option>
-            <option value="white">бял</option>
-            <option value="black">черен</option>
-            <option value="gray">сив</option>
-            <option value="yellow">жълт</option>
-            <option value="beige">бежов</option>
-            <option value="bordo">бордо</option>
-            <option value="bronze">бронзов</option>
-            <option value="violet">виолетов</option>
-            <option value="green">зелен</option>
-            <option value="gold">златен</option>
-            <option value="brown">кафяв</option>
-            <option value="orange">оранжев</option>
-            <option value="silver">сребърен</option>
-            <option value="red">червен</option>
-            <option value="purple">лилав</option>
-            <option value="ohra">охра</option>
-            <option value="perl">перла</option>
-            <option value="pink">розов</option>
-            <option value="chameleon">хамелеон</option>
+            <option value="blue">blue</option>
+            <option value="white">white</option>
+            <option value="black">red</option>
+            <option value="gray">gray</option>
+            <option value="yellow">yellow</option>
+            <option value="beige">beige</option>
+            <option value="bordo">bordo</option>
+            <option value="bronze">bronze</option>
+            <option value="violet">violet</option>
+            <option value="green">green</option>
+            <option value="gold">gold</option>
+            <option value="brown">brown</option>
+            <option value="orange">orange</option>
+            <option value="silver">silver</option>
+            <option value="red">red</option>
+            <option value="purple">purple</option>
+            <option value="ohra">ohra</option>
+            <option value="perl">perl</option>
+            <option value="pink">pink</option>
+            <option value="chameleon">chameleon</option>
   
           </select>  
-          <label for="type" class="block mb-1 text-sm font-medium text-gray-900">Тип:</label>   
+          <label for="type" class="block mb-1 text-sm font-medium text-gray-900">Type:</label>   
           <select id="type" class="mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="type" value="{{ type }}">
-            <option value="sedan">седан</option>
-            <option value="hatchback">хечбек</option>
-            <option value="combi">комби</option>
-            <option value="coupe">купе</option>
-            <option value="cabrio">кабрио</option>
-            <option value="jeep">джип</option>
-            <option value="pickup">пикап</option>
-            <option value="van">ван</option>
+            <option value="sedan">sedan</option>
+            <option value="hatchback">hatchback</option>
+            <option value="combi">combi</option>
+            <option value="coupe">coupe</option>
+            <option value="cabrio">cabrio</option>
+            <option value="jeep">jeep</option>
+            <option value="pickup">pickup</option>
+            <option value="van">van</option>
           </select>
-          <label for="displacement" class="block mb-1 text-sm font-medium text-gray-900">Обем на двигателя:</label>   
+          <label for="displacement" class="block mb-1 text-sm font-medium text-gray-900">Engine displacement (cm³):</label>   
           <input value=1400 type="number" class="mb-2 bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="displacement" name="displacement" value="{{ displacement }}">
          
-          <label for="hp" class="block mb-1 text-sm font-medium text-gray-900">Консики сили:</label>   
+          <label for="hp" class="block mb-1 text-sm font-medium text-gray-900">Horse power:</label>   
           <input value=100 type="number" class=" mb-2  bg-white-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="hp" name="hp" value="{{ hp }}">
           
           <!-- <label for="euro" class="block mb-1 text-sm font-medium text-gray-900">Евро Рейтинг:</label>   
