@@ -102,7 +102,6 @@ def get_brands(brand):
     # do something with the selected option
     return jsonify(models=models)
 
-
 if __name__ == "__main__":
     # port = int(os.environ.get('PORT', 8000))
     app.run(debug=True, port=os.getenv("PORT", default=5000))
