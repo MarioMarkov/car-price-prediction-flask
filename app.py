@@ -70,9 +70,11 @@ def predict():
     pred_dt = helpers.dt_model_prediction(car)
 
     # Use the TensorFlow model to make a prediction
-    pred_tf = helpers.tf_model_prediction(car_tf)
+    #pred_tf = helpers.tf_model_prediction(car_tf)
 
-    results = json.dumps({"pred_dt": pred_dt, "pred_tf": pred_tf})
+    results = json.dumps({"pred_dt": pred_dt, 
+                          #"pred_tf": pred_tf
+                          })
     # session['results'] = results
     # return render_template(
     #     'index.html',
@@ -91,9 +93,11 @@ def display_prediction():
     results = json.loads(request.args["results"])  # counterpart for url_for()
     # results = session['results']
     pred_dt = results["pred_dt"]
-    pred_tf = results["pred_tf"]
+    #pred_tf = results["pred_tf"]
 
-    return render_template("prediction.html", pred_dt=pred_dt, pred_tf=pred_tf)
+    return render_template("prediction.html", pred_dt=pred_dt, 
+                           pred_tf=0
+                           )
 
 
 @app.route("/get_brands/<brand>", methods=["GET"])
