@@ -7,7 +7,6 @@ from xgboost import XGBRegressor
 
 def encode(data,ordinal_encoder, oh_encoder, oh_columns, ordinal_columns):
     data[ordinal_columns] = ordinal_encoder.transform(data[ordinal_columns])
-
     # One-Hot Encoding
     oh_columns_data = pd.DataFrame(oh_encoder.transform(data[oh_columns])) 
 
