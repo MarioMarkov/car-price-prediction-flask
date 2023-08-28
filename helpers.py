@@ -3,6 +3,7 @@ import numpy as np
 import pickle
 import tensorflow as tf
 from requests import Request
+from xgboost import XGBRegressor
 
 def encode(data,ordinal_encoder, oh_encoder, oh_columns, ordinal_columns):
     data[ordinal_columns] = ordinal_encoder.transform(data[ordinal_columns])
